@@ -8,7 +8,7 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
         http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
 
-	<!-- TODO: Import CXF -->
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
 
 	<context:component-scan base-package="com.pluralsight.cxfdemo"></context:component-scan>
 
@@ -19,10 +19,17 @@
 	    <property name="suffix" value=".jsp"/>
 	</bean>
 
-	<!-- TODO: Define the custom interceptor to add a SOAP header -->
+	<bean id="orderServiceSoapHeaderOutInterceptor" class="com.pluralsight.cxfdemo.orders.OrderServiceSoapHeaderOutInterceptor" />
 
-	<!-- TODO: Define the JAX:WS client (jaxws namespace already defined) 
-		       and the custom interceptor reference
-	-->
+	<jaxws:client
+		id="orders"
+		address="http://localhost:8080/apache-cxf-jax-ws-demo/services/orders"
+		serviceClass="com.pluralsight.service.orders.Orders">
+
+		<jaxws:outInterceptors>
+			<ref bean="orderServiceSoapHeaderOutInterceptor" />
+		</jaxws:outInterceptors>
+
+	</jaxws:client>
 
 </beans>
